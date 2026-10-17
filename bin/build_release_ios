@@ -1,0 +1,97 @@
+#!/bin/bash
+# 无签名打包脚本：build → 删签名 → ldid 重签 → 打 IPA
+
+# 用法: bash bin/build_release_ios
+
+# 产物: ./LocalTune.ipa
+
+set -e
+cd "$(dirname "$0")/.."
+
+echo "🚀 构建 LocalTune release (无签名)..."
+
+BUILD_DIR="build/_payload"
+IPA="LocalTune.ipa"
+ENT="/tmp/localtune_entitlements.plist"
+ENT_WIDGET="/tmp/localtune_widget_entitlements.plist"
+
+rm -rf "$BUILD_DIR" "$IPA"
+mkdir -p "$BUILD_DIR/Payload"
+
+# 用 Xcode 默认 DerivedData（不指定 -derivedDataPath），SPM 包缓存与 Xcode 共享，
+# 避免每次全量重新克隆 GitHub 依赖。
+xcodebuild \
+  -project LocalTune.xcodeproj \
+  -scheme LocalTune \
+  -configuration Release \
+  -destination 'generic/platform=iOS' \
+  CODE_SIGNING_ALLOWED=NO \
+  CODE_SIGNING_REQUIRED=NO \
+  CODE_SIGN_IDENTITY="" \
+  DEVELOPMENT_TEAM="" \
+  build
+
+APP=$(ls -dt ~/Library/Developer/Xcode/DerivedData/LocalTune-*/Build/Products/Release-iphoneos/LocalTune.app 2>/dev/null | head -1)
+[ -d "$APP" ] || { echo "❌ 找不到 Release .app，请先在 Xcode 里 Build 一次"; exit 1; }
+echo "📦 产物: $APP"
+cp -R "$APP" "$BUILD_DIR/Payload/"
+
+cat > "$ENT" <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>application-identifier</key>
+	<string>Z249BQ4D97.com.localmusic.player</string>
+	<key>com.apple.developer.team-identifier</key>
+	<string>Z249BQ4D97</string>
+	<key>com.apple.mediaremote.set-playback-state</key>
+	<true/>
+  <key>com.apple.developer.siri</key>
+  <true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.localmusic.player</string>
+	</array>
+</dict>
+</plist>
+EOF
+
+cat > "$ENT_WIDGET" <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>application-identifier</key>
+	<string>Z249BQ4D97.com.localmusic.player.widget</string>
+	<key>com.apple.developer.team-identifier</key>
+	<string>Z249BQ4D97</string>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.localmusic.player</string>
+	</array>
+</dict>
+</plist>
+EOF
+
+find "$BUILD_DIR/Payload" -name "_CodeSignature" -exec rm -rf {} + 2>/dev/null || true
+find "$BUILD_DIR/Payload" -name "embedded.mobileprovision" -delete 2>/dev/null || true
+
+APP_BIN="$BUILD_DIR/Payload/LocalTune.app"
+ldid -S"$ENT" "$APP_BIN/LocalTune"
+
+for fw in "$APP_BIN/Frameworks/"*.framework; do
+  ldid -S"$ENT" "$fw"
+done
+
+for plug in "$APP_BIN/PlugIns/"*.appex; do
+  name=$(basename "$plug" .appex)
+  ldid -S"$ENT_WIDGET" "$plug/$name"
+done
+
+cd "$BUILD_DIR"
+zip -rqX "../../$IPA" Payload
+cd ../..
+rm -rf "$BUILD_DIR" "$ENT" /tmp/localtune_*_entitlements.plist
+
+echo "✅ 完成: $PWD/$IPA"

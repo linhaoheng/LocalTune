@@ -1,0 +1,144 @@
+name: LocalTune
+options:
+  bundleIdPrefix: com.localmusic
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+  defaultConfig: Debug
+  developmentLanguage: zh-Hans
+settings:
+  SWIFT_VERSION: "5.9"
+  DEVELOPMENT_TEAM: Z249BQ4D97
+
+# 第三方库：除 PanModal / SVProgressHUD 外都走远程包（网络拉取，起点取最新版本、不钉死）。
+# PanModal / SVProgressHUD 留本地源码 —— 这两个上面带着我们自己的改动，换远程会丢。
+# 产品名不写时按包名取，"SnapKit" 的包名与产品名一致，所以那一条不用写 product。
+packages:
+  RxSwift:
+    url: https://github.com/ReactiveX/RxSwift
+    from: 6.10.2
+  SnapKit:
+    url: https://github.com/SnapKit/SnapKit
+    from: 6.0.0
+  GRDB:
+    url: https://github.com/groue/GRDB.swift
+    from: 7.11.1
+  SFBAudioEngine:
+    url: https://github.com/sbooth/SFBAudioEngine
+    from: 0.14.0
+  SVProgressHUD:
+    path: Libraries/SVProgressHUD
+  PanModal:
+    path: Libraries/PanModal
+  MarqueeLabel:
+    url: https://github.com/cbpowell/MarqueeLabel
+    from: 4.5.3
+
+targets:
+  LocalTune:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: LocalTune
+        excludes:
+          - "*.entitlements"
+    dependencies:
+      - package: RxSwift
+        product: RxSwift
+      - package: RxSwift
+        product: RxCocoa
+      - package: RxSwift
+        product: RxRelay
+      - package: SnapKit
+      - package: GRDB
+      - package: SFBAudioEngine
+      - package: SVProgressHUD
+      - package: PanModal
+      - package: MarqueeLabel
+      - target: LocalTuneWidget
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.localmusic.player
+        PRODUCT_NAME: LocalTune
+        INFOPLIST_FILE: LocalTune/Info.plist
+        GENERATE_INFOPLIST_FILE: false
+        CODE_SIGN_ENTITLEMENTS: LocalTune/LocalTune.entitlements
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: Apple Development
+        CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION: YES
+        DEVELOPMENT_TEAM: Z249BQ4D97
+        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+        ASSETCATALOGS_APPICON_NAME: AppIcon
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: false
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
+        SWIFT_OBJC_BRIDGING_HEADER: LocalTune/LocalTune-Bridging-Header.h
+        HEADER_SEARCH_PATHS: "$(inherited) $(SRCROOT)/LocalTune/Playback/Effects"
+  LocalTuneWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "16.0"
+    # 通道模型与 Intent 三件双 target 编译（扩展里声明按钮、主 App 进程里执行）；
+    # 色板两个文件跟进来是为了同一份 `AppColor` token，不复制色值。
+    sources:
+      - path: LocalTuneWidget
+      - path: LocalTune/App/Widget/WidgetPlaybackSnapshot.swift
+      - path: LocalTune/App/Widget/WidgetSharedStore.swift
+      - path: LocalTune/App/Widget/WidgetPlaybackIntents.swift
+      - path: LocalTune/App/Widget/WidgetLyricsPolicy.swift
+      - path: LocalTune/Core/Design/ColorRadix.swift
+      - path: LocalTune/Core/Design/AppColor.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.localmusic.player.widget
+        PRODUCT_NAME: LocalTuneWidget
+        INFOPLIST_FILE: LocalTuneWidget/Info.plist
+        GENERATE_INFOPLIST_FILE: false
+        CODE_SIGN_ENTITLEMENTS: LocalTuneWidget/LocalTuneWidget.entitlements
+        DEVELOPMENT_TEAM: Z249BQ4D97
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: Apple Development
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SKIP_INSTALL: true
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks"
+  LocalTuneTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: LocalTuneTests
+        # ⚠️ **冻结** `PlaylistTransferTests.swift`：它测的「歌单导入导出」**只有设计文档、没有实现**
+        #（`PlaylistMatcher` / `PlaylistFile` / `PlaylistImporter` / `PlaylistExporter` / `PlaylistImportError`
+        # 全工程为 0；规格见 docs/设计/歌单导入导出设计.md）。
+        # 文件是**规格的镜像**（比文档更精确：三层匹配 / 大小写 / 音标归一 / 并列取先 / 空标题不给匹配），
+        # 所以**不删**；但留在 target 里会卡死整条测试链路。实现那一刀真做时，**删掉这行 exclude 即挂回**。
+        excludes:
+          - "PlaylistTransferTests.swift"
+    dependencies:
+      - target: LocalTune
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.localmusic.player.tests
+        GENERATE_INFOPLIST_FILE: true
+        DEVELOPMENT_TEAM: Z249BQ4D97
+schemes:
+  LocalTune:
+    build:
+      targets:
+        LocalTune: all
+        LocalTuneTests: [test]
+    run:
+      config: Release
+      debugEnabled: false
+    test:
+      config: Debug
+      targets:
+        - LocalTuneTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
