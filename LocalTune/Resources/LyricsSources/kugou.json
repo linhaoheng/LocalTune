@@ -1,0 +1,41 @@
+{
+  "id": "kugou",
+  "name": "酷狗",
+  "version": 1,
+  "capabilities": ["lyrics", "lyricsWordLevel"],
+  "rateLimit": 0,
+  "headers": {
+    "User-Agent": "LocalTune/iOS"
+  },
+  "search": {
+    "url": "https://mobiles.kugou.com/api/v3/search/song",
+    "method": "GET",
+    "params": {
+      "format": "json",
+      "keyword": "{{query}}",
+      "page": "1",
+      "pagesize": "{{limit}}",
+      "showtype": "1"
+    },
+    "script": "if (response.status !== 1) throw new Error('status');\nvar info = (response.data && response.data.info) || [];\nvar all = [];\nfor (var i = 0; i < info.length; i++) {\n  all.push(info[i]);\n  var group = info[i].group || [];\n  for (var j = 0; j < group.length; j++) { all.push(group[j]); }\n}\nreturn all.map(function (s) {\n  var hash = String(s.hash || '');\n  var ms = Math.round((s.duration || 0) * 1000);\n  var title = String(s.songname || '');\n  return {\n    id: hash + '|' + ms + '|' + title,\n    title: title,\n    artist: String(s.singername || ''),\n    album: String(s.album_name || ''),\n    durationMs: ms\n  };\n});"
+  },
+  "lyrics": {
+    "url": "https://lyrics.kugou.com/search",
+    "method": "GET",
+    "params": {
+      "ver": "1",
+      "man": "yes",
+      "client": "pc",
+      "keyword": "{{id[2]}}",
+      "duration": "{{id[1]}}",
+      "hash": "{{id[0]}}"
+    },
+    "script": "if (response.status !== 200 || response.errcode !== 200) throw new Error('status');\nvar list = response.candidates || [];\nif (!list.length) return null;\nreturn { _fetchEncryptedLyrics: true, vars: list.slice(0, 5).map(function (c) { return { id: String(c.id), accesskey: String(c.accesskey) }; }) };"
+  },
+  "secrets": {
+    "lyricsFetchUrl": "https://lyrics.kugou.com/download?ver=1&client=pc&id={{id}}&accesskey={{accesskey}}&fmt=krc&charset=utf8",
+    "lyricsContentField": "content",
+    "lyricsMagicHex": "6b726331",
+    "lyricsXorKeyHex": "404761775e3274475136312dced26e69"
+  }
+}

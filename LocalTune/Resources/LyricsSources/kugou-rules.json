@@ -1,0 +1,83 @@
+{
+  "id": "kugou-rules",
+  "name": "酷狗（清洗版）",
+  "version": 1,
+  "capabilities": ["lyrics", "lyricsWordLevel"],
+  "rateLimit": 0,
+  "headers": {
+    "User-Agent": "LocalTune/iOS"
+  },
+  "search": {
+    "url": "https://mobiles.kugou.com/api/v3/search/song",
+    "method": "GET",
+    "params": {
+      "format": "json",
+      "keyword": "{{query}}",
+      "page": "1",
+      "pagesize": "{{limit}}",
+      "showtype": "1"
+    },
+    "script": "if (response.status !== 1) throw new Error('status');\nvar info = (response.data && response.data.info) || [];\nvar all = [];\nfor (var i = 0; i < info.length; i++) {\n  all.push(info[i]);\n  var group = info[i].group || [];\n  for (var j = 0; j < group.length; j++) { all.push(group[j]); }\n}\nreturn all.map(function (s) {\n  var hash = String(s.hash || '');\n  var ms = Math.round((s.duration || 0) * 1000);\n  var title = String(s.songname || '');\n  return {\n    id: hash + '|' + ms + '|' + title,\n    title: title,\n    artist: String(s.singername || ''),\n    album: String(s.album_name || ''),\n    durationMs: ms\n  };\n});"
+  },
+  "lyrics": {
+    "url": "https://lyrics.kugou.com/search",
+    "method": "GET",
+    "params": {
+      "ver": "1",
+      "man": "yes",
+      "client": "pc",
+      "keyword": "{{id[2]}}",
+      "duration": "{{id[1]}}",
+      "hash": "{{id[0]}}"
+    },
+    "script": "if (response.status !== 200 || response.errcode !== 200) throw new Error('status');\nvar list = response.candidates || [];\nif (!list.length) return null;\nreturn { _fetchEncryptedLyrics: true, vars: list.slice(0, 5).map(function (c) { return { id: String(c.id), accesskey: String(c.accesskey) }; }) };"
+  },
+  "rules": [
+    {
+      "dropLineContaining": [
+        "编曲", "制作", "监制", "出品", "发行", "统筹", "企划", "策划", "督导",
+        "推广", "营销", "宣发", "行销", "宣传", "运营", "商务", "经纪", "团队",
+        "协作", "协力", "合作", "单位", "支持", "平台", "管理", "工作室",
+
+        "录音", "混音", "缩混", "录混", "母带", "贴混", "分轨", "工程", "助理",
+        "编写", "调校", "调教", "校对", "编辑", "文案", "封面", "视觉", "设计",
+        "海报", "图绘", "影像", "导演", "造型", "妆发", "题字", "摄影", "翻译",
+        "顾问", "媒介", "鸣谢", "感谢", "念白", "厂牌", "专辑介绍", "曲绘",
+        "呼麦", "戏腔", "乐队",
+
+        "和声", "和音", "配唱", "伴唱", "合唱", "主唱", "原唱", "童声", "指挥",
+
+        "吉他", "吉它", "贝斯", "键盘", "钢琴", "弦乐", "管乐", "管弦", "笛子",
+        "古筝", "琵琶", "二胡", "唢呐", "胡琴", "扬琴", "提琴", "尺八", "古琴",
+        "小号", "长号", "单簧管", "萨克斯", "打击乐", "合成器", "马头琴", "热瓦普",
+        "葫芦丝", "冬不拉", "科布兹", "巴拉莱卡", "巴松", "簧管", "轨道",
+
+        "OA", "OP", "OT", "PV", "SP", "A&R", "PGM", "ISRC",
+        "Bass", "Drum", "Pads", "Brass", "Cello", "Choir", "Horns", "Mixed", "Mixer",
+        "Piano", "Synth", "Viola", "Vocal", "Winds", "Kobza", "Assist", "Violin", "Mixing",
+        "String", "Guitar", "Master", "Chorus", "Record", "violins", "Arrange", "Conduct",
+        "Editing", "Hormony", "Ocarina", "Produce", "Whistle", "Stylist", "Engineer",
+        "Keyboard", "Director", "Harmonica", "Balalaika", "Percussion", "Programing",
+        "Production", "Programming", "Additional programming", "Irish whistle",
+
+        "Lyrics", "Lyricist", "Composer", "Written", " by"
+      ]
+    },
+    {
+      "dropLineContaining": [
+        "未经许可", "未经授权", "版权所有", "翻版必究", "侵权必究", "违者必究",
+        "版权必究", "版权声明", "侵权必删",
+        "不得翻唱", "不得转载", "不得复制", "不得使用", "不得传播",
+        "请勿使用", "请勿转载", "翻唱或使用",
+        "腾讯", "翻译权"
+      ],
+      "scope": "line"
+    }
+  ],
+  "secrets": {
+    "lyricsFetchUrl": "https://lyrics.kugou.com/download?ver=1&client=pc&id={{id}}&accesskey={{accesskey}}&fmt=krc&charset=utf8",
+    "lyricsContentField": "content",
+    "lyricsMagicHex": "6b726331",
+    "lyricsXorKeyHex": "404761775e3274475136312dced26e69"
+  }
+}
