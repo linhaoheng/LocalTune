@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+	小组件扩展（.appex）**自己**的隐私清单 —— 跟 App 那份是**两个二进制**各一份。
+
+	🔴 内容**与 App 那份不同**，别照抄：
+	扩展只用到 App Group 的 UserDefaults（`App/Widget/WidgetSharedStore.swift`），
+	既没有读文件时间戳、也没有用 `.standard`。多写一类就是"声明了本二进制里不存在的符号"。
+
+	逐条理由见 docs/设计/隐私清单.md（哪一句用到哪个 API、为什么是这个码）。
+-->
+<plist version="1.0">
+<dict>
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>1C8F.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

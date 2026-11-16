@@ -1,0 +1,232 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AVFAudioExtensions",
+        "repositoryURL": "https://github.com/sbooth/AVFAudioExtensions",
+        "state": {
+          "branch": null,
+          "revision": "276deda6780b974be0d3dacf1bb0a890754b9e1b",
+          "version": "0.5.1"
+        }
+      },
+      {
+        "package": "CDUMB",
+        "repositoryURL": "https://github.com/sbooth/CDUMB",
+        "state": {
+          "branch": null,
+          "revision": "0cceb710cad35b9aaf5bb6b65faf71436b6aa7c3",
+          "version": "2.0.3"
+        }
+      },
+      {
+        "package": "CSpeex",
+        "repositoryURL": "https://github.com/sbooth/CSpeex",
+        "state": {
+          "branch": null,
+          "revision": "ba33fd93d54d8e7fc93b8a1d27991e756bac7345",
+          "version": "1.2.1"
+        }
+      },
+      {
+        "package": "CXXAudioRingBuffer",
+        "repositoryURL": "https://github.com/sbooth/CXXAudioRingBuffer",
+        "state": {
+          "branch": null,
+          "revision": "266fb309d074f7843c9f125435b5921075c957b5",
+          "version": "0.2.0"
+        }
+      },
+      {
+        "package": "CXXDispatchSemaphore",
+        "repositoryURL": "https://github.com/sbooth/CXXDispatchSemaphore",
+        "state": {
+          "branch": null,
+          "revision": "cd267c1dffae0e132abe7b63fcee1e1fe357f23d",
+          "version": "0.4.1"
+        }
+      },
+      {
+        "package": "CXXMessageQueue",
+        "repositoryURL": "https://github.com/sbooth/CXXMessageQueue",
+        "state": {
+          "branch": null,
+          "revision": "0e9d1901f281986822e4ad2d6d6d9b5ecbe3c7db",
+          "version": "0.2.2"
+        }
+      },
+      {
+        "package": "CXXMonkeysAudio",
+        "repositoryURL": "https://github.com/sbooth/CXXMonkeysAudio",
+        "state": {
+          "branch": null,
+          "revision": "79cafc4dfccff8b9d3065cbf198f6e171a9409c3",
+          "version": "12.13.0"
+        }
+      },
+      {
+        "package": "CXXQueue",
+        "repositoryURL": "https://github.com/sbooth/CXXQueue",
+        "state": {
+          "branch": null,
+          "revision": "b3b39f38e81d1fc5294ae99c81e019e1fe3b8582",
+          "version": "0.1.1"
+        }
+      },
+      {
+        "package": "CXXTagLib",
+        "repositoryURL": "https://github.com/sbooth/CXXTagLib",
+        "state": {
+          "branch": null,
+          "revision": "9e499ea0a69d107791ac0a2fe9d6a59cf401c6f9",
+          "version": "2.3.2"
+        }
+      },
+      {
+        "package": "CXXUnfairLock",
+        "repositoryURL": "https://github.com/sbooth/CXXUnfairLock",
+        "state": {
+          "branch": null,
+          "revision": "d134022b339567958b3a941dfa3cd079d31f1030",
+          "version": "0.3.1"
+        }
+      },
+      {
+        "package": "flac-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/flac-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "9005dc2cd455765fb6824eb215c9703429bbe8ff",
+          "version": "0.2.0"
+        }
+      },
+      {
+        "package": "GRDB",
+        "repositoryURL": "https://github.com/groue/GRDB.swift",
+        "state": {
+          "branch": null,
+          "revision": "b83108d10f42680d78f23fe4d4d80fc88dab3212",
+          "version": "7.11.1"
+        }
+      },
+      {
+        "package": "lame-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/lame-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "07703e040231d50f2e7f160c670f356f129a00e4",
+          "version": "0.1.2"
+        }
+      },
+      {
+        "package": "MarqueeLabel",
+        "repositoryURL": "https://github.com/cbpowell/MarqueeLabel",
+        "state": {
+          "branch": null,
+          "revision": "c6b4da400c00dfd5db7a4f6e4915ca531d95fc49",
+          "version": "4.5.3"
+        }
+      },
+      {
+        "package": "mpc-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/mpc-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "de4b45fa64ed88467806c50217e9da7032a99d80",
+          "version": "0.1.2"
+        }
+      },
+      {
+        "package": "mpg123-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/mpg123-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "acc2c651cbd8fff8bc8cdeb4faf14b35ba81adee",
+          "version": "0.3.1"
+        }
+      },
+      {
+        "package": "ogg-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/ogg-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "48cbf24e7fb5d329b1f5e24cd2e5b048585ff770",
+          "version": "0.1.3"
+        }
+      },
+      {
+        "package": "opus-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/opus-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "8e23828b9d88f0ff1ff2d7c4bcb65739a4bdeff8",
+          "version": "0.3.0"
+        }
+      },
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift",
+        "state": {
+          "branch": null,
+          "revision": "132aea4f236ccadc51590b38af0357a331d51fa2",
+          "version": "6.10.2"
+        }
+      },
+      {
+        "package": "SFBAudioEngine",
+        "repositoryURL": "https://github.com/sbooth/SFBAudioEngine",
+        "state": {
+          "branch": null,
+          "revision": "7dea577e74723a182189687ab84d962c4607c3d5",
+          "version": "0.14.0"
+        }
+      },
+      {
+        "package": "SnapKit",
+        "repositoryURL": "https://github.com/SnapKit/SnapKit",
+        "state": {
+          "branch": null,
+          "revision": "e27a338a03a5f388de759da63f9baf7988ed9e00",
+          "version": "6.0.0"
+        }
+      },
+      {
+        "package": "sndfile-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/sndfile-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "52f73460dc04ba789ad3007ad004faa328b732dd",
+          "version": "0.1.2"
+        }
+      },
+      {
+        "package": "tta-cpp-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/tta-cpp-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "b68cf8a127936434cae93aa2c613d4b47eb34de4",
+          "version": "0.1.2"
+        }
+      },
+      {
+        "package": "vorbis-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/vorbis-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "842020eabcebe410e698c68545d6597b2d232e51",
+          "version": "0.1.2"
+        }
+      },
+      {
+        "package": "wavpack-binary-xcframework",
+        "repositoryURL": "https://github.com/sbooth/wavpack-binary-xcframework",
+        "state": {
+          "branch": null,
+          "revision": "c8c2a9f930349a7209e14f6e5667fc5cc38b6c4b",
+          "version": "0.2.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
